@@ -1,0 +1,177 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: var(--nav-h);
+  border-bottom: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: all 0.4s var(--transition);
+}
+
+.navbar.navbar--scrolled {
+  background: var(--accent);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Scrolled Text Colors */
+.navbar--scrolled .navbar__logo,
+.navbar--scrolled .navbar__logo-icon,
+.navbar--scrolled .navbar__logo-text {
+  color: white !important;
+}
+
+.navbar--scrolled .navbar__logo-text span {
+  color: var(--accent-2) !important;
+}
+
+.navbar--scrolled .navbar__links a {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.navbar--scrolled .navbar__links a:hover,
+.navbar--scrolled .navbar__links a.active {
+  color: white !important;
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  gap: 24px;
+}
+
+.navbar__logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--accent);
+  letter-spacing: -0.01em;
+}
+
+[data-theme='dark'] .navbar__logo {
+  color: white;
+}
+
+.navbar__logo-icon {
+  color: var(--accent);
+}
+
+[data-theme='dark'] .navbar__logo-icon {
+  color: white;
+}
+
+.navbar__logo-text span {
+  color: var(--accent-2);
+}
+
+.navbar__links {
+  display: flex;
+  gap: 32px;
+  margin-left: 48px;
+  flex: 1;
+}
+
+.navbar__links a {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--ink);
+  position: relative;
+  padding: 6px 0;
+  letter-spacing: 0.01em;
+}
+
+.navbar__links a:hover, .navbar__links a.active {
+  color: var(--accent-2);
+}
+
+.navbar__links a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--accent-2);
+  border-radius: 2px;
+}
+
+.navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Black Pill Comparison Button */
+.navbar__compare-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  height: 44px;
+  background: #0F172A; /* Slate 900 / Deep Black */
+  color: white;
+  border-radius: var(--radius-full);
+  transition: all 0.3s var(--transition);
+  position: relative;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.navbar__compare-pill:hover:not(.disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  background: #000;
+}
+
+.navbar__compare-pill.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--border);
+  color: var(--ink-extra-soft);
+  box-shadow: none;
+}
+
+.navbar__compare-count {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  background: #FF3366; /* Vibrant Pink/Red */
+  color: white;
+  font-size: 10px;
+  font-weight: 900;
+  border-radius: 99px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .navbar__links { display: none; }
+  .navbar__inner { gap: 12px; }
+  .navbar__logo-text { display: flex; font-size: 18px; }
+}
+
+[data-theme='dark'] .navbar {
+  background: var(--surface);
+  border-bottom-color: var(--border);
+}
+
+[data-theme='dark'] .navbar__compare-pill {
+  background: #1e293b;
+}
+
+[data-theme='dark'] .navbar__compare-pill:hover {
+  background: #334155;
+}
