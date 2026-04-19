@@ -33,8 +33,44 @@ class SearchService {
     
     try {
       const resultsArray = await Promise.all(searchPromises);
-      const allResults = resultsArray.flat();
-      return this._convertResults(allResults);
+      let allResults = resultsArray.flat();
+
+      // Convert prices to GHS before filtering/sorting for consistency
+      allResults = this._convertResults(allResults);
+
+      // ─── Global Filtering (Fallback for adapters that don't filter upstream) ───
+      const minPrice = parseFloat(filters.minPrice);
+      const maxPrice = parseFloat(filters.maxPrice);
+      const minRating = parseFloat(filters.minRating);
+
+      allResults = allResults.filter(p => {
+        if (!isNaN(minPrice) && p.price < minPrice) return false;
+        if (!isNaN(maxPrice) && p.price > maxPrice) return false;
+        if (!isNaN(minRating) && p.rating < minRating) return false;
+        if (filters.category && filters.category !== "all" && p.category !== filters.category) return false;
+        return true;
+      });
+
+      // ─── Global Sorting ───
+      switch (filters.sortBy) {
+        case "price_asc":
+          allResults.sort((a, b) => a.price - b.price);
+          break;
+        case "price_desc":
+          allResults.sort((a, b) => b.price - a.price);
+          break;
+        case "rating":
+          allResults.sort((a, b) => b.rating - a.rating);
+          break;
+        case "popularity":
+          allResults.sort((a, b) => b.reviewCount - a.reviewCount);
+          break;
+        default:
+          // Default: mix results naturally or keep API order
+          break;
+      }
+
+      return allResults;
     } catch (err) {
       console.error("SearchService Error:", err);
       throw err;

@@ -14,7 +14,10 @@ const CATEGORIES = [
   { id: "all", label: "All Categories" },
   { id: "electronics", label: "Electronics" },
   { id: "fashion", label: "Fashion" },
-  { id: "home", label: "Home" }
+  { id: "home", label: "Home" },
+  { id: "beauty", label: "Beauty" },
+  { id: "sports", label: "Sports" },
+  { id: "toys", label: "Toys" }
 ];
 
 const SORT_OPTIONS = [

@@ -16,7 +16,7 @@ class SerpApiEbayAdapter extends BaseAdapter {
   }
 
   get apiKey() {
-    return process.env.SERPAPI_KEY || "16eaf106e54c09a6b28453ff0291295c7fcec3073fe1b0ee5dbc8258b7ef1101";
+    return process.env.SERPAPI_KEY;
   }
 
   isConfigured() {
