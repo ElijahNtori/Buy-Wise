@@ -151,7 +151,7 @@ export default function AccountPage() {
     try {
       if (mode === "register") {
         await register(form);
-        setMessage("Account created! A verification link has been sent to your email. Please verify your email before logging in.");
+        setMessage("Account created successfully! You can now log in.");
       } else {
         await login({ email: form.email, password: form.password });
         setMessage("Signed in successfully.");
@@ -763,7 +763,7 @@ export default function AccountPage() {
           <div className="account-card__header">
             <p className="account-eyebrow">Account</p>
             <h2>{mode === "register" ? "Create your account" : isCompareIntent ? "Sign in to compare" : "Welcome back"}</h2>
-            <p>{mode === "register" ? "Create an account, verify your email, then sign in to compare products." : isCompareIntent ? "You need an account before selecting products for comparison." : "Sign in to save and sync your deals."}</p>
+            <p>{mode === "register" ? "Create an account and start comparing products immediately." : isCompareIntent ? "You need an account before selecting products for comparison." : "Sign in to save and sync your deals."}</p>
           </div>
 
           {/* Email verification result banner */}
