@@ -39,8 +39,7 @@ class UserStore {
         name: name.trim(),
         email: normalizedEmail,
         password_hash: passwordHash,
-        verification_token: verificationToken,
-        is_verified: false,
+        is_verified: true,
         wishlist: [],
         recently_viewed: []
       })

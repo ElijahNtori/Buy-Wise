@@ -24,17 +24,11 @@ exports.register = async (req, res) => {
       return res.status(400).json({ success: false, message: "Name is required" });
     }
 
-    const verificationToken = crypto.randomBytes(32).toString("hex");
-    const user = await userStore.createUser({ name, email, password, verificationToken });
-
-    // Send verification email asynchronously
-    EmailService.sendVerificationEmail(user.email, user.name, verificationToken).catch(err => {
-      console.error(`Failed to send verification email to ${user.email}:`, err.message);
-    });
+    const user = await userStore.createUser({ name, email, password });
 
     res.status(201).json({
       success: true,
-      message: "Account created! A verification link has been sent to your email. Please verify your email before logging in."
+      message: "Account created successfully! You can now log in."
     });
   } catch (err) {
     res.status(err.status || 500).json({
@@ -55,13 +49,6 @@ exports.login = async (req, res) => {
     const userDoc = await userStore.validateUser(email, password);
     if (!userDoc) {
       return res.status(401).json({ success: false, message: "Invalid email or password" });
-    }
-
-    if (!userDoc.isVerified) {
-      return res.status(403).json({
-        success: false,
-        message: "Your email address is not verified. Please check your inbox for the activation link."
-      });
     }
 
     const user = userStore.publicUser(userDoc);
