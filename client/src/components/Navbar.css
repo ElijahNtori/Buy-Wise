@@ -33,9 +33,22 @@
   color: rgba(255, 255, 255, 0.8) !important;
 }
 
-.navbar--scrolled .navbar__links a:hover,
-.navbar--scrolled .navbar__links a.active {
+.navbar--scrolled .navbar__links a:hover {
   color: white !important;
+}
+
+.navbar--scrolled .navbar__links a.active {
+  color: #000 !important;
+}
+
+.navbar--scrolled .navbar__currency-toggle,
+.navbar--scrolled .navbar__icon-btn {
+  color: white !important;
+}
+
+.navbar--scrolled .navbar__currency-toggle {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
 .navbar__inner {
@@ -157,6 +170,64 @@
   justify-content: center;
 }
 
+/* Currency and Icon Buttons */
+.navbar__currency-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 700;
+  transition: all 0.3s var(--transition);
+}
+
+.navbar__currency-toggle:hover {
+  border-color: var(--accent-2);
+  color: var(--accent-2);
+  background: var(--card);
+}
+
+.navbar__icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  color: var(--ink-soft);
+  transition: all 0.3s var(--transition);
+  position: relative;
+}
+
+.navbar__icon-btn:hover {
+  background: var(--accent-soft);
+  color: var(--accent-2);
+}
+
+.navbar__icon-btn.has-items {
+  color: var(--accent-3);
+}
+
+.navbar__badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  min-width: 14px;
+  height: 14px;
+  background: var(--accent-3);
+  color: white;
+  font-size: 8px;
+  font-weight: 900;
+  border-radius: 99px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @media (max-width: 768px) {
   .navbar__links { display: none; }
   .navbar__inner { gap: 12px; }
@@ -174,4 +245,10 @@
 
 [data-theme='dark'] .navbar__compare-pill:hover {
   background: #334155;
+}
+
+[data-theme='dark'] .navbar__currency-toggle {
+  background: #1e293b;
+  border-color: #334155;
+  color: var(--ink-soft);
 }

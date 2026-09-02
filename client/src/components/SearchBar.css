@@ -1,3 +1,4 @@
+/* ── Base ─────────────────────────────────────────────────────────────── */
 .searchbar {
   position: relative;
   width: 100%;
@@ -8,27 +9,20 @@
   align-items: center;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm); /* More professional than full round */
+  border-radius: var(--radius-sm);
   padding: 8px 10px 8px 24px;
   gap: 16px;
   transition: all 0.3s var(--transition);
   box-shadow: var(--shadow);
 }
-
-.searchbar__wrapper:hover {
-  border-color: var(--muted);
-}
-
+.searchbar__wrapper:hover { border-color: var(--muted); }
 .searchbar__wrapper.focused {
   border-color: var(--accent);
   box-shadow: var(--shadow-lg), 0 0 0 1px var(--accent);
   transform: translateY(-2px);
 }
 
-.searchbar__icon {
-  color: var(--ink-extra-soft);
-  flex-shrink: 0;
-}
+.searchbar__icon { color: var(--ink-extra-soft); flex-shrink: 0; }
 
 .searchbar__input {
   flex: 1;
@@ -52,10 +46,7 @@
   justify-content: center;
   border-radius: 50%;
 }
-.searchbar__clear:hover {
-  background: var(--border-soft);
-  color: var(--ink);
-}
+.searchbar__clear:hover { background: var(--border-soft); color: var(--ink); }
 
 .searchbar__submit {
   padding: 14px 40px;
@@ -67,8 +58,8 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   transition: all 0.3s var(--transition);
+  white-space: nowrap;
 }
-
 .searchbar__submit:hover:not(:disabled) {
   background: var(--accent);
   box-shadow: var(--shadow-accent);
@@ -80,63 +71,104 @@
   cursor: not-allowed;
 }
 
-.searchbar__spinner {
-  animation: spin 1s linear infinite;
-}
+.searchbar__spinner { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* Suggestions dropdown */
+/* ── Suggestions dropdown ─────────────────────────────────────────────── */
 .searchbar__suggestions {
   position: absolute;
-  top: calc(100% + 16px);
-  left: 0; right: 0;
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
   border-radius: var(--radius-sm);
-  padding: 32px;
+  padding: 12px 0;
   background: var(--card);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-lg);
-  z-index: 200;
-  animation: fadeUp 0.4s var(--transition);
+  z-index: 300;
+  animation: fadeUp 0.2s var(--transition);
 }
 
 .searchbar__suggestions-header {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 16px;
+  padding: 4px 16px 10px;
 }
 .searchbar__suggestions-header p {
-  font-size: 13px;
+  flex: 1;
+  font-size: 12px;
   font-weight: 700;
-  color: var(--ink);
-  letter-spacing: 0.01em;
-}
-
-.searchbar__chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.searchbar__chip {
-  padding: 8px 18px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-full);
-  font-size: 13px;
-  font-weight: 600;
   color: var(--ink-soft);
-  transition: all 0.2s;
-}
-.searchbar__chip:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px -4px hsla(245, 100%, 65%, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
+.searchbar__clear-recent {
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.searchbar__clear-recent:hover { text-decoration: underline; }
+
+/* ── Suggestion list items ────────────────────────────────────────────── */
+.searchbar__suggestion-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.searchbar__suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.searchbar__suggestion-item:hover,
+.searchbar__suggestion-item.active {
+  background: var(--border-soft);
+  color: var(--accent);
+}
+.searchbar__suggestion-item .item-icon {
+  color: var(--ink-extra-soft);
+  flex-shrink: 0;
+}
+.searchbar__suggestion-item .item-icon.recent {
+  color: var(--accent);
+}
+.searchbar__suggestion-item span {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.searchbar__suggestion-item strong {
+  font-weight: 700;
+}
+.searchbar__suggestion-item .item-arrow {
+  color: var(--ink-extra-soft);
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.searchbar__suggestion-item:hover .item-arrow,
+.searchbar__suggestion-item.active .item-arrow {
+  opacity: 1;
+}
+
+/* ── Mobile ───────────────────────────────────────────────────────────── */
 @media (max-width: 600px) {
   .searchbar__wrapper { padding: 5px 6px 5px 16px; }
   .searchbar__submit { padding: 10px 20px; font-size: 13px; }
-  .searchbar__suggestions { padding: 16px; }
+  .searchbar__suggestions { left: -8px; right: -8px; }
 }

@@ -14,6 +14,11 @@ const mockProducts = [
     rating: 4.7,
     reviewCount: 12453,
     image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400&h=400&fit=crop"
+    ],
     seller: "Amazon.com",
     shipping: "Free",
     deliveryDays: 2,
@@ -383,6 +388,11 @@ const mockProducts = [
     rating: 4.6,
     reviewCount: 154,
     image: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=400&h=400&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1611078481174-8313901b009e?w=400&h=400&fit=crop"
+    ],
     seller: "Amazon.com",
     shipping: "Free",
     deliveryDays: 2,

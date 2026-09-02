@@ -62,6 +62,7 @@ class AlibabaAdapter extends BaseAdapter {
           rating: parseFloat(p.seller?.ratings?.find(r => r.label === "Product as Described")?.score) || 0,
           reviewCount: 0, // Alibaba doesn't always show total review count in search
           image: p.thumbnail?.startsWith("//") ? `https:${p.thumbnail}` : p.thumbnail,
+          images: [p.thumbnail?.startsWith("//") ? `https:${p.thumbnail}` : p.thumbnail],
           seller: p.supplier?.name || "Alibaba Supplier",
           shipping: "Check Site",
           deliveryDays: 30, // Default for international shipping

@@ -1,0 +1,146 @@
+/* ────────────────────────────────────────────────────────────
+   Append these rules to your existing ProductCard.css
+   ──────────────────────────────────────────────────────────── */
+
+/* ── Wishlist button ──────────────────────────────────────── */
+.product-card__wishlist {
+  position: absolute;
+  /* If an aiBadge is present it sits top-right; wishlist goes below it */
+  top: 52px;
+  right: 16px;
+  z-index: 4;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--ink-extra-soft);
+  transition: all 0.25s var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+.product-card__wishlist:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+  transform: scale(1.12);
+}
+.product-card__wishlist.active {
+  border-color: #ef4444;
+  color: #ef4444;
+  background: #fff1f1;
+}
+
+/* When there's NO aiBadge, move wishlist back to the very top */
+.product-card:not(:has(.product-card__ai-badge)) .product-card__wishlist {
+  top: 16px;
+}
+
+/* ── Reviews toggle ───────────────────────────────────────── */
+.product-card__reviews-toggle {
+  display: block;
+  text-align: center;
+  width: 100%;
+  padding: 10px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  border-top: 1px solid var(--border-soft);
+  background: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.product-card__reviews-toggle:hover {
+  background: var(--border-soft);
+  color: var(--ink);
+}
+.product-card__reviews-toggle svg,
+.product-card__reviews-toggle span {
+  display: inline-block;
+  vertical-align: middle;
+}
+.product-card__reviews-toggle svg:first-child {
+  margin-right: 6px;
+}
+.product-card__reviews-toggle .toggle-chevron {
+  margin-left: 6px;
+  transition: transform 0.25s var(--transition);
+}
+.product-card__reviews-toggle.open .toggle-chevron {
+  transform: rotate(180deg);
+}
+
+/* ── Reviews panel ────────────────────────────────────────── */
+.product-card__reviews-panel {
+  border-top: 1px solid var(--border-soft);
+  padding: 12px 16px;
+  background: var(--card);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeUp 0.2s var(--transition);
+}
+.reviews-panel__label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-extra-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.review-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-soft);
+}
+.review-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+.review-item__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.review-item__user {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.review-item__date {
+  font-size: 11px;
+  color: var(--ink-extra-soft);
+  margin-left: auto;
+}
+.review-item__text {
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+.review-item__helpful {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--ink-extra-soft);
+}
+
+@media (max-width: 600px) {
+  .product-card__wishlist {
+    width: 28px;
+    height: 28px;
+    top: 40px;
+    right: 8px;
+  }
+
+  .product-card__wishlist svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .product-card:not(:has(.product-card__ai-badge)) .product-card__wishlist {
+    top: 8px;
+  }
+}

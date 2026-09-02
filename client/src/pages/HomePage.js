@@ -1,52 +1,38 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { 
-  Laptop, 
-  Smartphone, 
-  Home, 
-  Headphones, 
-  Watch, 
-  Shirt, 
-  Search, 
-  Scale, 
-  ShoppingCart,
-  Zap,
-  Store,
-  ShieldCheck,
-  TrendingUp,
-  Truck,
-  Globe,
-  Tag,
-  CheckCircle2,
-  Heart,
-  Dumbbell,
-  Baby
+import {
+  Laptop, Smartphone, Home, Headphones, Watch, Shirt,
+  Search, Scale, Zap, ShieldCheck, TrendingUp, Truck,
+  CheckCircle2, Heart, Dumbbell, Baby, ArrowRight, Globe2
 } from "lucide-react";
-import SearchBar from "../components/SearchBar";
+import SearchBar       from "../components/SearchBar";
+import RecentlyViewed  from "../components/RecentlyViewed";
 import { usePageTitle } from "../hooks/usePageTitle";
 import "./HomePage.css";
 
 const FEATURED_CATEGORIES = [
-  { icon: Laptop, label: "Electronics", query: "laptop" },
-  { icon: Shirt, label: "Fashion", query: "shoes" },
-  { icon: Home, label: "Home", query: "air fryer" },
-  { icon: Smartphone, label: "Phones", query: "phone" },
-  { icon: Headphones, label: "Audio", query: "headphones" },
-  { icon: Watch, label: "Wearables", query: "smart watch" },
-  { icon: Heart, label: "Beauty", query: "skincare" },
-  { icon: Dumbbell, label: "Sports", query: "gym" },
-  { icon: Baby, label: "Toys", query: "lego" }
+  { icon: Laptop,      label: "Electronics", query: "laptop" },
+  { icon: Shirt,       label: "Fashion",     query: "shoes" },
+  { icon: Home,        label: "Home",         query: "air fryer" },
+  { icon: Smartphone,  label: "Phones",       query: "phone" },
+  { icon: Headphones,  label: "Audio",        query: "headphones" },
+  { icon: Watch,       label: "Wearables",    query: "smart watch" },
+  { icon: Heart,       label: "Beauty",       query: "skincare" },
+  { icon: Dumbbell,    label: "Sports",       query: "gym" },
+  { icon: Baby,        label: "Toys",         query: "lego" }
 ];
 
 const MARKETPLACES = [
-  { name: "Amazon", color: "#FF9900", logo: "/logos/amazon.png", desc: "Worldwide leader" },
-  { name: "eBay", color: "#0064D2", logo: "/logos/ebay.png", desc: "Auctions & deals" },
+  { name: "Amazon",     color: "#FF9900", logo: "/logos/amazon.png",     desc: "Worldwide leader" },
+  { name: "eBay",       color: "#0064D2", logo: "/logos/ebay.png",       desc: "Auctions & deals" },
   { name: "AliExpress", color: "#E62E04", logo: "/logos/aliexpress.png", desc: "Budget-friendly" },
-  { name: "Alibaba", color: "#FF6600", logo: "/logos/alibaba.png", desc: "Wholesale & Business" }
+  { name: "Alibaba",    color: "#FF6600", logo: "/logos/alibaba.png",    desc: "Wholesale & Business" }
 ];
 
 export default function HomePage() {
   usePageTitle("Premium Price Comparison");
   const navigate = useNavigate();
+  const [newsletterMessage, setNewsletterMessage] = useState("");
 
   const handleSearch = (query) => {
     navigate(`/search?q=${encodeURIComponent(query)}`);
@@ -60,29 +46,67 @@ export default function HomePage() {
           <div className="home__hero-content">
             <div className="home__hero-tag fade-up">
               <Zap size={14} fill="currentColor" />
-              COMPARE GLOBAL PRICES INSTANTLY
+              Live marketplace comparison
             </div>
             <h1 className="home__hero-title fade-up" style={{ animationDelay: "80ms" }}>
-              The Smart Way to <br /><span>Shop Globally</span>
+              Find the right deal before you buy.
             </h1>
             <p className="home__hero-sub fade-up" style={{ animationDelay: "140ms" }}>
-              Compare Amazon, eBay, AliExpress & Alibaba in one place. 
-              Stop overpaying and start saving with real-time price tracking.
+              Search once and compare prices, ratings, delivery, and sellers across the marketplaces shoppers already use.
             </p>
             <div className="home__hero-search fade-up" style={{ animationDelay: "200ms" }}>
               <SearchBar onSearch={handleSearch} />
             </div>
+            <div className="home__quick-links fade-up" style={{ animationDelay: "260ms" }}>
+              {FEATURED_CATEGORIES.slice(0, 5).map(cat => (
+                <button key={cat.label} onClick={() => handleSearch(cat.query)}>
+                  {cat.label}
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="home__hero-illustration">
-            <img src="/hero.png" alt="" aria-hidden="true" />
+
+          <div className="home__deal-panel fade-up" style={{ animationDelay: "180ms" }}>
+            <div className="home__deal-panel-top">
+              <span>Sample comparison</span>
+              <strong>Best value detected</strong>
+            </div>
+            <div className="home__deal-product">
+              <img src="/hero.png" alt="" aria-hidden="true" />
+              <div>
+                <p>Wireless headphones</p>
+                <h3>GH₵ 1,245.00</h3>
+                <span>18% lower than average</span>
+              </div>
+            </div>
+            <div className="home__deal-bars">
+              {MARKETPLACES.map((mp, i) => (
+                <div key={mp.name} className="home__deal-row">
+                  <img src={mp.logo} alt={mp.name} />
+                  <span>{mp.name}</span>
+                  <div style={{ "--w": `${92 - i * 14}%`, "--c": mp.color }} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Marketplaces */}
-      <section className="home__section">
+      {/* Recently Viewed — only renders if there's anything to show */}
+      <section className="home__section home__recent">
         <div className="container">
-          <h2 className="home__section-title">Marketplaces We Compare</h2>
+          <RecentlyViewed />
+        </div>
+      </section>
+
+      {/* Marketplaces */}
+      <section className="home__section home__marketplaces">
+        <div className="container">
+          <div className="home__section-head">
+            <span><Globe2 size={16} /> Marketplace coverage</span>
+            <h2>One search across the stores that matter.</h2>
+            <p>Buy-Wise keeps the comparison surface focused: price, trust signals, delivery, and direct marketplace links.</p>
+          </div>
           <div className="home__mp-grid">
             {MARKETPLACES.map(mp => (
               <div key={mp.name} className="home__mp-card" style={{ "--mp-color": mp.color }}>
@@ -98,9 +122,15 @@ export default function HomePage() {
       </section>
 
       {/* Categories */}
-      <section className="home__section">
+      <section className="home__section home__discovery">
         <div className="container">
-          <h2 className="home__section-title">Browse by Category</h2>
+          <div className="home__section-head home__section-head--row">
+            <div>
+              <span><Search size={16} /> Start exploring</span>
+              <h2>Popular searches, ready to compare.</h2>
+            </div>
+            <p>Jump into a category or type exactly what you want. The interface is built for fast product decisions, not browsing forever.</p>
+          </div>
           <div className="home__cat-grid">
             {FEATURED_CATEGORIES.map((cat, i) => (
               <button
@@ -122,6 +152,10 @@ export default function HomePage() {
       {/* Why Buy-Wise */}
       <section className="home__section home__benefits">
         <div className="container">
+          <div className="home__benefits-intro">
+            <span>Why it feels faster</span>
+            <h2>Less tab-hopping. More confident decisions.</h2>
+          </div>
           <div className="home__benefits-grid">
             <div className="home__benefit-card fade-up">
               <ShieldCheck size={40} className="benefit-icon" />
@@ -145,25 +179,28 @@ export default function HomePage() {
       {/* How it works */}
       <section className="home__section home__how">
         <div className="container">
-          <h2 className="home__section-title">Seamless Comparison Flow</h2>
+          <div className="home__section-head">
+            <span><Scale size={16} /> Comparison flow</span>
+            <h2>From search to checkout in three clean moves.</h2>
+          </div>
           <div className="home__steps">
             {[
-              { n: "1", icon: Search, title: "Search", desc: "Type any product name to search across all platforms at once." },
-              { n: "2", icon: Scale, title: "Compare", desc: "See prices, ratings, shipping, and sellers side by side." },
-              { n: "3", icon: CheckCircle2, title: "Buy", desc: "Click 'Buy Now' to go directly to the marketplace and complete your purchase." }
+              { n: "1", icon: Search,       title: "Search",  desc: "Type any product name to search across all platforms at once." },
+              { n: "2", icon: Scale,        title: "Compare", desc: "See prices, ratings, shipping, and sellers side by side." },
+              { n: "3", icon: CheckCircle2, title: "Buy",     desc: "Click 'Buy Now' to go directly to the marketplace and complete your purchase." }
             ].map((step, i) => (
               <div key={step.n} className="home__step fade-up" style={{ animationDelay: `${i * 100}ms` }}>
                 <div className="home__step-num">{step.n}</div>
-                <div className="home__step-icon-wrap">
-                  <step.icon size={32} />
-                </div>
+                <div className="home__step-icon-wrap"><step.icon size={32} /></div>
                 <h3>{step.title}</h3>
                 <p>{step.desc}</p>
+                {i < 2 && <ArrowRight className="home__step-arrow" size={20} />}
               </div>
             ))}
           </div>
         </div>
       </section>
+
       {/* Newsletter */}
       <section className="home__section home__newsletter">
         <div className="container">
@@ -171,10 +208,21 @@ export default function HomePage() {
             <div className="home__newsletter-content">
               <h2>Never Overpay Again</h2>
               <p>Join 50,000+ smart shoppers receiving weekly curated deals and price-drop alerts from across the digital landscape.</p>
-              <form className="home__newsletter-form" onSubmit={(e) => e.preventDefault()}>
+              <form
+                className="home__newsletter-form"
+                onSubmit={e => {
+                  e.preventDefault();
+                  setNewsletterMessage("You're on the early-access deals list.");
+                }}
+              >
                 <input type="email" placeholder="Enter your email" required />
                 <button type="submit" className="btn-primary">Subscribe</button>
               </form>
+              {newsletterMessage && (
+                <p className="home__newsletter-feedback" role="status">
+                  {newsletterMessage}
+                </p>
+              )}
             </div>
             <div className="home__newsletter-icon">
               <Zap size={120} fill="currentColor" opacity={0.1} />

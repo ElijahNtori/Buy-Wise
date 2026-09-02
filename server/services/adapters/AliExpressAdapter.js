@@ -52,6 +52,7 @@ class AliExpressAdapter extends BaseAdapter {
         rating: p.rating || 0,
         reviewCount: p.orders_count || 0,
         image: p.image_url,
+        images: [p.image_url],
         seller: "AliExpress Seller", 
         shipping: "Check Site",
         deliveryDays: 15,

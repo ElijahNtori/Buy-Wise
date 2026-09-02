@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { Sun, Moon } from "lucide-react";
+import { useToast } from "../context/ToastContext";
 import "./ThemeToggle.css";
 
 export default function ThemeToggle() {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+  const { addToast } = useToast();
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -11,7 +13,9 @@ export default function ThemeToggle() {
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme(prev => prev === "light" ? "dark" : "light");
+    const next = theme === "light" ? "dark" : "light";
+    setTheme(next);
+    addToast(`Theme switched to ${next} mode`, "success");
   };
 
   return (

@@ -16,7 +16,7 @@ services:
   # Node.js Backend API
   backend:
     build:
-      context: ./backend
+      context: ./server
       dockerfile: Dockerfile
     container_name: buywise-backend
     restart: unless-stopped
@@ -25,15 +25,18 @@ services:
     environment:
       NODE_ENV: production
       PORT: 5000
+      FRONTEND_URL: http://localhost:3000
       MONGODB_URI: mongodb://mongo:27017/buywise
       CACHE_TTL: 300
+      FIXER_API_KEY: ${FIXER_API_KEY:-}
+      JWT_SECRET: ${JWT_SECRET:-change_this_in_production}
     depends_on:
       - mongo
 
   # React Frontend
   frontend:
     build:
-      context: ./frontend
+      context: ./client
       dockerfile: Dockerfile
     container_name: buywise-frontend
     restart: unless-stopped

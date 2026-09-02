@@ -1,0 +1,104 @@
+/* ── Append these to your existing Navbar.css ─────────────── */
+
+/* Generic icon button (wishlist, etc.) */
+.navbar__icon-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: var(--ink-soft);
+  border: 1px solid var(--border);
+  transition: all 0.25s var(--transition);
+  text-decoration: none;
+  background: none;
+}
+.navbar__icon-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+.navbar__icon-btn.has-items {
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.navbar__badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 2px solid var(--card);
+}
+
+/* Currency toggle pill */
+.navbar__currency-toggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  background: none;
+  cursor: pointer;
+  transition: all 0.25s var(--transition);
+  letter-spacing: 0.04em;
+}
+.navbar__currency-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+/* When scrolled — keep action items visible on dark bg */
+.navbar--scrolled .navbar__currency-toggle,
+.navbar--scrolled .navbar__icon-btn {
+  border-color: rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.85);
+}
+.navbar--scrolled .navbar__currency-toggle:hover,
+.navbar--scrolled .navbar__icon-btn:hover {
+  border-color: white;
+  color: white;
+}
+
+/* Responsive visibility utilities */
+@media (min-width: 769px) {
+  .mobile-show {
+    display: none !important;
+  }
+}
+@media (max-width: 768px) {
+  .mobile-hide {
+    display: none !important;
+  }
+  .navbar__sidebar-toggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  /* Hide comparison pill in header on mobile to save space */
+  .navbar__compare-pill {
+    display: none !important;
+  }
+  /* Reduce header actions gap on mobile */
+  .navbar__actions {
+    gap: 8px !important;
+  }
+}

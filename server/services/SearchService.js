@@ -1,73 +1,56 @@
-const mockAdapter = require("./adapters/MockAdapter");
-const amazonAdapter = require("./adapters/AmazonRapidApiAdapter");
-const ebayAdapter = require("./adapters/SerpApiEbayAdapter");
+const mockAdapter      = require("./adapters/MockAdapter");
+const amazonAdapter    = require("./adapters/AmazonAdapter");
+const ebayAdapter      = require("./adapters/SerpApiEbayAdapter");
 const aliexpressAdapter = require("./adapters/AliExpressAdapter");
-const alibabaAdapter = require("./adapters/AlibabaAdapter");
+const alibabaAdapter   = require("./adapters/AlibabaAdapter");
 const { convertToGHS } = require("../utils/currencyUtils");
 
-/**
- * SearchService orchestrates requests across multiple marketplace adapters.
- */
 class SearchService {
   constructor() {
     this.realAdapters = {
-      amazon: amazonAdapter,
-      ebay: ebayAdapter,
+      amazon:     amazonAdapter,
+      ebay:       ebayAdapter,
       aliexpress: aliexpressAdapter,
-      alibaba: alibabaAdapter
+      alibaba:    alibabaAdapter
     };
     this.mockAdapter = mockAdapter;
   }
 
-  /**
-   * Search across all active adapters and aggregate results.
-   */
   async search(query, filters) {
     let marketplacesToSearch = ["amazon", "ebay", "aliexpress", "alibaba"];
-    
+
     if (filters.marketplace && filters.marketplace !== "all") {
       marketplacesToSearch = [filters.marketplace];
     }
 
-    const searchPromises = marketplacesToSearch.map(m => this._searchMarketplace(m, query, filters));
-    
+    const searchPromises = marketplacesToSearch.map(m =>
+      this._searchMarketplace(m, query, filters)
+    );
+
     try {
       const resultsArray = await Promise.all(searchPromises);
       let allResults = resultsArray.flat();
 
-      // Convert prices to GHS before filtering/sorting for consistency
-      allResults = this._convertResults(allResults);
+      allResults = await this._convertResults(allResults);
 
-      // ─── Global Filtering (Fallback for adapters that don't filter upstream) ───
-      const minPrice = parseFloat(filters.minPrice);
-      const maxPrice = parseFloat(filters.maxPrice);
+      const minPrice  = parseFloat(filters.minPrice);
+      const maxPrice  = parseFloat(filters.maxPrice);
       const minRating = parseFloat(filters.minRating);
 
       allResults = allResults.filter(p => {
-        if (!isNaN(minPrice) && p.price < minPrice) return false;
-        if (!isNaN(maxPrice) && p.price > maxPrice) return false;
+        if (!isNaN(minPrice)  && p.price  < minPrice)  return false;
+        if (!isNaN(maxPrice)  && p.price  > maxPrice)  return false;
         if (!isNaN(minRating) && p.rating < minRating) return false;
         if (filters.category && filters.category !== "all" && p.category !== filters.category) return false;
         return true;
       });
 
-      // ─── Global Sorting ───
       switch (filters.sortBy) {
-        case "price_asc":
-          allResults.sort((a, b) => a.price - b.price);
-          break;
-        case "price_desc":
-          allResults.sort((a, b) => b.price - a.price);
-          break;
-        case "rating":
-          allResults.sort((a, b) => b.rating - a.rating);
-          break;
-        case "popularity":
-          allResults.sort((a, b) => b.reviewCount - a.reviewCount);
-          break;
-        default:
-          // Default: mix results naturally or keep API order
-          break;
+        case "price_asc":  allResults.sort((a, b) => a.price       - b.price);       break;
+        case "price_desc": allResults.sort((a, b) => b.price       - a.price);       break;
+        case "rating":     allResults.sort((a, b) => b.rating      - a.rating);      break;
+        case "popularity": allResults.sort((a, b) => b.reviewCount - a.reviewCount); break;
+        default: break;
       }
 
       return allResults;
@@ -77,16 +60,12 @@ class SearchService {
     }
   }
 
-  /**
-   * Internal helper to search a specific marketplace with fallback.
-   */
   async _searchMarketplace(marketplace, query, filters) {
     const adapter = this.realAdapters[marketplace];
-    
-    // 1. Try real adapter if it exists and is configured
+
     if (adapter && adapter.isConfigured()) {
       try {
-        console.log(`[SearchService] Fetching real data for ${marketplace}...`);
+        console.log(`[SearchService] ${marketplace} IS configured. Fetching real data...`);
         return await adapter.search(query, filters);
       } catch (err) {
         console.warn(`[SearchService] Real ${marketplace} adapter failed:`, err.message);
@@ -98,54 +77,51 @@ class SearchService {
       }
     }
 
-    // 2. Fallback to mock adapter
-    // We pass the marketplace filter to the mock adapter to ensure it only returns products for that marketplace
     return this.mockAdapter.search(query, { ...filters, marketplace });
   }
 
   /**
-   * Get a product by ID by checking all adapters.
+   * FIX: The original loop had no try/catch per adapter. A network error from
+   * the first configured adapter would propagate up and skip all subsequent
+   * adapters (including mock fallback). Each adapter call is now wrapped
+   * individually so failures are isolated and iteration continues.
    */
   async getProductById(id) {
-    // Try real adapters first
     for (const adapter of Object.values(this.realAdapters)) {
       if (adapter.isConfigured()) {
-        const product = await adapter.getById(id);
-        if (product) return this._convertResults(product);
+        try {
+          const product = await adapter.getById(id);
+          if (product) return await this._convertResults(product);
+        } catch (err) {
+          console.warn(`[SearchService] getById failed on ${adapter.name}:`, err.message);
+          // Continue to next adapter
+        }
       }
     }
-    
+
     // Fallback to mock
     const mockProduct = await this.mockAdapter.getById(id);
-    return this._convertResults(mockProduct);
+    return await this._convertResults(mockProduct);
   }
 
-  /**
-   * Helper to convert all prices to GHS centrally.
-   */
-  _convertResults(data) {
+  async _convertResults(data) {
     if (!data) return data;
-    
     if (Array.isArray(data)) {
-      return data.map(p => this._convertSingleProduct(p));
+      return await Promise.all(data.map(p => this._convertSingleProduct(p)));
     }
-    
-    return this._convertSingleProduct(data);
+    return await this._convertSingleProduct(data);
   }
 
-  _convertSingleProduct(p) {
+  async _convertSingleProduct(p) {
     if (!p) return p;
-    
+    const convertedPrice = await convertToGHS(p.price, p.currency);
     return {
       ...p,
-      price: convertToGHS(p.price, p.currency),
+      price: convertedPrice,
       currency: "GHS"
     };
   }
 
-  /**
-   * Get multiple products by IDs (aggregating across adapters).
-   */
   async getProductsByIds(ids) {
     const productPromises = ids.map(id => this.getProductById(id));
     const results = await Promise.all(productPromises);

@@ -49,7 +49,7 @@ export default function Footer() {
       </div>
       <div className="footer__bottom container">
         <p>&copy; {new Date().getFullYear()} Buy-Wise. All rights reserved.</p>
-        <p>Built for shoppers worldwide.</p>
+        <p>Built by Haggla</p>
       </div>
     </footer>
   );

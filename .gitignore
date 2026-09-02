@@ -37,3 +37,6 @@ scratch/
 buywise.txt
 verify_*.js
 debug_*.js
+server/data/users.json
+server/data/exchangeRates.json
+server/api_response_log.txt
